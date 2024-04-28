@@ -1,33 +1,57 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using tpmodul10_1302223019;
 
-namespace MOD10.Controllers
+
+namespace tpmodul10_1302223041.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class MahasiswaController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly List<Mahasiswa> anggotaKelompok = new List<Mahasiswa>
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            new Mahasiswa("Puri Lalita Anagata", "1302223019"),
+            new Mahasiswa("Rd. M. Faisal Ramadhan Junaidi", "1302220093"),
+            new Mahasiswa("Muhammad Fajar Mufid", "1302223032"),
+            new Mahasiswa("Arga Adolf Lumunon", "1302223038"),
+            new Mahasiswa("Gina Soraya", "1302223070"),
+            new Mahasiswa("Muhammad Rizqi Fadhilah", "1302220020")
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            _logger = logger;
+            return Ok(anggotaKelompok);
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpPost]
+        public IActionResult Create(Mahasiswa mahasiswa)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            anggotaKelompok.Add(mahasiswa);
+            return CreatedAtAction(nameof(GetById), new { id = anggotaKelompok.IndexOf(mahasiswa) }, mahasiswa);
+        }
+
+        [HttpPost("{id}")]
+        public IActionResult GetById(int id)
+        {
+            if (id < 0 || id >= anggotaKelompok.Count)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return NotFound();
+            }
+            return Ok(anggotaKelompok[id]);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (id < 0 || id >= anggotaKelompok.Count)
+            {
+                return NotFound();
+            }
+            anggotaKelompok.RemoveAt(id);
+            return NoContent();
         }
     }
 }
