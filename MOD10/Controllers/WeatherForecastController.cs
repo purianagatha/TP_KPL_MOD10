@@ -4,7 +4,7 @@ using System.Linq;
 using tpmodul10_1302223019;
 
 
-namespace tpmodul10_1302223041.Controllers
+namespace tpmodul10_1302223019.Controllers
 {
     [ApiController]
     [Route("[controller]")]
